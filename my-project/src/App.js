@@ -1,13 +1,14 @@
 import React from 'react'
-import Body from "./components/Body"
-import Login from "./components/Login"
+import { Provider } from 'react-redux'
+import store from './utils/appStore'
+import Body from './components/Body'
+
 const App = () => {
   return (
     <div>
-      <Login/>
-     
-
-  
+      <Provider store={store}>      
+      <Body/>
+      </Provider>
     </div>
   )
 }
