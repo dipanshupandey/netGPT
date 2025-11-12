@@ -1,7 +1,6 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { options } from "../utils/constants";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+// ❌ We no longer need 'options', so the import is removed.
 import {
   addNowPlaying,
   addPopular,
@@ -15,6 +14,8 @@ import {
 
 const useAddData = () => {
   const dispatch = useDispatch();
+
+  // --- Select all data from the store ---
   const nowPlaying = useSelector((store) => store.browse.nowPlaying);
   const popular = useSelector((store) => store.browse.popular);
   const topRated = useSelector((store) => store.browse.topRated);
@@ -25,95 +26,92 @@ const useAddData = () => {
   const popularIndianTvShows = useSelector((store) => store.browse.popularIndianTvShows);
 
   useEffect(() => {
-    // Define async function inside useEffect
-    const fetchAllData = async () => {
+    // --- Helper function to fetch from our proxy ---
+    const fetchData = async (tmdbPath, dispatchAction) => {
       try {
-       // 1️⃣ Now Playing (Global)
-       if (!nowPlaying?.length) {
-        const nowPlayingRes = await fetch(
-          "https://api.themoviedb.org/3/movie/now_playing?language=en-US",
-          options
-        );
-        const nowPlayingData = await nowPlayingRes.json();
-        dispatch(addNowPlaying(nowPlayingData.results));
-      }
+        // Build the secure proxy URL
+        const url = `/api/tmdb?path=${encodeURIComponent(tmdbPath)}`;
+        
+        // Fetch without the 'options' object
+        const res = await fetch(url);
+        const data = await res.json();
 
-      // 2️⃣ Popular Movies (Global)
-      if (!popular?.length) {
-        const popularRes = await fetch(
-          "https://api.themoviedb.org/3/movie/popular?language=en-US",
-          options
-        );
-        const popularData = await popularRes.json();
-        dispatch(addPopular(popularData.results));
-      }
-
-      // 3️⃣ Top Rated Movies (Global)
-      if (!topRated?.length) {
-        const topRatedRes = await fetch(
-          "https://api.themoviedb.org/3/movie/top_rated?language=en-US",
-          options
-        );
-        const topRatedData = await topRatedRes.json();
-        dispatch(addTopRated(topRatedData.results));
-      }
-
-      // 4️⃣ Upcoming Bollywood Movies (India)
-      if (!upComingBollyWood?.length) {
-        const upcomingBollyRes = await fetch(
-          "https://api.themoviedb.org/3/movie/upcoming?language=en-IN&region=IN",
-          options
-        );
-        const upcomingBollyData = await upcomingBollyRes.json();
-        dispatch(addUpComingBollyWood(upcomingBollyData.results));
-      }
-
-      // 5️⃣ Discover Bollywood Movies
-      if (!disCoverBolllyWood?.length) {
-        const discoverBollyRes = await fetch(
-          "https://api.themoviedb.org/3/discover/movie?with_origin_country=IN&language=en-IN&sort_by=popularity.desc",
-          options
-        );
-        const discoverBollyData = await discoverBollyRes.json();
-        dispatch(addDisCoverBolllyWood(discoverBollyData.results));
-      }
-
-      // 6️⃣ Popular TV Shows (Global)
-      if (!popularTvShows?.length) {
-        const popularTvRes = await fetch(
-          "https://api.themoviedb.org/3/tv/popular?language=en-US",
-          options
-        );
-        const popularTvData = await popularTvRes.json();
-        dispatch(addPopularTvShows(popularTvData.results));
-      }
-
-      // 7️⃣ Top Rated TV Shows (Global)
-      if (!topRatedTvShows?.length) {
-        const topRatedTvRes = await fetch(
-          "https://api.themoviedb.org/3/tv/top_rated?language=en-US",
-          options
-        );
-        const topRatedTvData = await topRatedTvRes.json();
-        dispatch(addTopRatedTvShows(topRatedTvData.results));
-      }
-
-      // 8️⃣ Popular Indian TV Shows
-      if (!popularIndianTvShows?.length) {
-        const popularIndianTvRes = await fetch(
-          "https://api.themoviedb.org/3/discover/tv?with_origin_country=IN&language=en-IN&sort_by=popularity.desc",
-          options
-        );
-        const popularIndianTvData = await popularIndianTvRes.json();
-        dispatch(addPopularIndianTvShows(popularIndianTvData.results));
-      } 
+        // Dispatch to Redux
+        if (data && data.results) {
+          dispatch(dispatchAction(data.results));
+        }
       } catch (err) {
-        console.error("Error fetching TMDB data:", err);
+        console.error(`Error fetching data for ${tmdbPath}:`, err);
       }
     };
 
-    fetchAllData();
-  }, [dispatch]); 
+    // --- Create a list of all fetches we need to run ---
+    const fetchPromises = [];
+
+    // Only add a fetch if the data doesn't already exist
+    if (!nowPlaying?.length) {
+      fetchPromises.push(
+        fetchData("/movie/now_playing?language=en-US", addNowPlaying)
+      );
+    }
+    if (!popular?.length) {
+      fetchPromises.push(
+        fetchData("/movie/popular?language=en-US", addPopular)
+      );
+    }
+    if (!topRated?.length) {
+      fetchPromises.push(
+        fetchData("/movie/top_rated?language=en-US", addTopRated)
+      );
+    }
+    if (!upComingBollyWood?.length) {
+      fetchPromises.push(
+        fetchData("/movie/upcoming?language=en-IN&region=IN", addUpComingBollyWood)
+      );
+    }
+    if (!disCoverBolllyWood?.length) {
+      fetchPromises.push(
+        fetchData(
+          "/discover/movie?with_origin_country=IN&language=en-IN&sort_by=popularity.desc",
+          addDisCoverBolllyWood
+        )
+      );
+    }
+    if (!popularTvShows?.length) {
+      fetchPromises.push(
+        fetchData("/tv/popular?language=en-US", addPopularTvShows)
+      );
+    }
+    if (!topRatedTvShows?.length) {
+      fetchPromises.push(
+        fetchData("/tv/top_rated?language=en-US", addTopRatedTvShows)
+      );
+    }
+    if (!popularIndianTvShows?.length) {
+      fetchPromises.push(
+        fetchData(
+          "/discover/tv?with_origin_country=IN&language=en-IN&sort_by=popularity.desc",
+          addPopularIndianTvShows
+        )
+      );
+    }
+
+    // --- Run all pending fetches in parallel ---
+    if (fetchPromises.length > 0) {
+      Promise.all(fetchPromises);
+    }
+
+  }, [
+    dispatch,
+    nowPlaying,
+    popular,
+    topRated,
+    upComingBollyWood,
+    disCoverBolllyWood,
+    popularTvShows,
+    topRatedTvShows,
+    popularIndianTvShows,
+  ]);
 };
 
 export default useAddData;
