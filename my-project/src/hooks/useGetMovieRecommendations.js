@@ -1,14 +1,19 @@
-import { options } from "../utils/constants";
+// REMOVED - Insecure
+// import { options } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { addGptResults } from "../utils/gptSlice";
-import { groq } from "../utils/constants";
-
+// REMOVED - Insecure
+// import { groq } from "../utils/constants";
 
 function useGetMovieRecommendations() {
   const dispatch = useDispatch();
 
   async function getMovieRecommendations(searchKeywords) {
-    const chatCompletion = await groq.chat.completions.create({
+    
+    // --- 1. Call your SECURE Groq API Proxy ---
+    
+    // This is the request payload. It's the same as before.
+    const groqRequestBody = {
       messages: [
         {
           role: "system",
@@ -27,38 +32,39 @@ function useGetMovieRecommendations() {
         },
       ],
       model: "llama-3.1-8b-instant",
-
-      // --- This is the most important part! ---
-      // It forces the model to output valid JSON.
       response_format: { type: "json_object" },
-
       temperature: 0.5,
       max_tokens: 512,
+    };
+
+    // Replace the direct Groq call with a fetch to your proxy
+    const gptRes = await fetch('/api/groq', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(groqRequestBody),
     });
 
-    // Get the raw JSON string from the response
-
-    const movieJsonString = chatCompletion.choices[0].message.content;
-    // Now you can parse this string and use the TMDB API
+    // Our new proxy returns the 'choice' object
+    const chatChoice = await gptRes.json();
+    
+    // Get the JSON string from the response
+    const movieJsonString = chatChoice.message.content;
     const movieJson = JSON.parse(movieJsonString);
     console.log(movieJson);
 
-    // (See Step 4)
+    // --- 2. Call your SECURE TMDB API Proxy ---
 
-    const movies = movieJson.movies.map((item) => {
-      return searchAll(item.title);
-    });
-    const resuts = await Promise.all(movies);
-    console.log(resuts);
-    dispatch(addGptResults(resuts));
-
-    // tmdbFunction
+    // The 'searchAll' function is now updated to use the TMDB proxy
     async function searchAll(query) {
       try {
-        const res = await fetch(
-          `https://api.themoviedb.org/3/search/multi?query=${query}&include_adult=false&language=en-US&page=1`,
-          options
-        );
+        // This is the TMDB path we want to get
+        const tmdbPath = `/search/multi?query=${query}&include_adult=false&language=en-US&page=1`;
+        
+        // This is your new proxy URL.
+        const url = `/api/tmdb?path=${encodeURIComponent(tmdbPath)}`;
+
+        // Fetch from the proxy. No 'options' needed!
+        const res = await fetch(url);
         const data = await res.json();
 
         // Filter only movies & TV shows (ignore people)
@@ -70,6 +76,14 @@ function useGetMovieRecommendations() {
         console.error("Error fetching data:", error);
       }
     }
+
+    // --- 3. Process Results (No change needed) ---
+    const movies = movieJson.movies.map((item) => {
+      return searchAll(item.title);
+    });
+    const results = await Promise.all(movies);
+    console.log(results);
+    dispatch(addGptResults(results));
   }
   return getMovieRecommendations;
 }

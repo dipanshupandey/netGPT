@@ -8,11 +8,11 @@ export const options={
     }
   };
 
-  export const groq = new Groq({
-    apiKey: process.env.REACT_APP_GROQ_KEY,
+  // export const groq = new Groq({
+  //   apiKey: process.env.REACT_APP_GROQ_KEY,
     
-    dangerouslyAllowBrowser: true,
-  });
+  //   dangerouslyAllowBrowser: true,
+  // });
 
   export const ln = {
     en: {
