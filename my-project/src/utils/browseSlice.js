@@ -43,7 +43,7 @@ const browseSlice = createSlice({
     },
     removeSelectedMovie:(state)=>{
       state.selectedMovie=null;
-      console.log("remo")
+      // console.log("remo")
     }
   },
 });

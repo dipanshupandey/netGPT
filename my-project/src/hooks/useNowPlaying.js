@@ -1,8 +1,6 @@
 import { useEffect } from "react"
-import { options } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addNowPlaying } from "../utils/browseSlice";
-import { UseSelector } from "react-redux";
 const useNowPlaying=()=>{
     const dispatch=useDispatch();
     const nowPlaying=useSelector((store)=>store.browse.nowPlaying);
@@ -23,7 +21,7 @@ async function getMovieData() {
     
     dispatch(addNowPlaying(data.results));
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 }
 

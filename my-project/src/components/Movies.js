@@ -26,7 +26,7 @@ const Movies = () => {
     { title: language.topRatedTVShows, data: topRatedTvShows },
     { title: language.popularIndianTVShows, data: popularIndianTvShows },
   ];
-  console.log(nowPlaying,popular)
+  // console.log(nowPlaying,popular)
   return (
     
     <>

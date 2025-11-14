@@ -76,28 +76,33 @@ The AI search feature uses a clean, state-driven flow orchestrated by Redux:
 ---
 
 ## 📂 Project Structure
+You are right, a <code> block can look messy and the spacing can be off. A clean, indented list is much more professional and easier to read.
 
-/my-project
-├── /api
-│   ├── tmdb.js      # Proxy for TMDB (v3) API
-│   └── groq.js      # Proxy for Groq AI API
+Here is a cleaner, better-formatted version for your README.md. Just replace the 📂 Project Structure section with this:
+
+📂 Project Structure
+
+my-project/
 │
-├── /public
-│   ├── favicon.ico
-│   └── ... (other static assets)
+├── api/                       # Serverless API routes (Vercel Functions)
+│   ├── tmdb.js                # Proxy → Secure TMDB API calls
+│   └── groq.js                # Proxy → Secure Groq AI API calls
 │
-├── /src
-│   ├── /components
-│   ├── /hooks
-│   ├── /utils
-│   │   ├── browseSlice.js
-│   │   ├── gptSlice.js
-│   │   ├── appStore.js
-│   │   ├── firebase.js
-│   │   └── ...
-│   ├── App.js
-│   └── index.js
+├── public/                    # Static assets (favicon, images, etc.)
 │
-├── .gitignore
-├── package.json
-└── vercel.json      
+├── src/                       # Main React application
+│   │
+│   ├── components/            # Reusable UI components
+│   │
+│   ├── hooks/                 # Custom React hooks (e.g., useAddData)
+│   │
+│   ├── utils/                 # Core configuration and helpers
+│   │   ├── appStore.js        # Redux store setup
+│   │   ├── browseSlice.js     # Redux slice → Movie sections
+│   │   ├── gptSlice.js        # Redux slice → AI search results
+│   │   └── firebase.js        # Firebase authentication setup
+│   │
+│   └── App.js                 # Root App component + Routing
+│
+├── package.json               # Dependencies, scripts, metadata
+└── vercel.json                # Vercel config (React Router rewrites)

@@ -5,9 +5,10 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {createBrowserRouter,RouterProvider,routerProvider} from 'react-router'
 import Login from './components/Login';
-import Browse from './components/Browse';
-import GPT from "./components/GPT";
-import Video from './components/Video';
+import { lazy,Suspense } from 'react';
+const Browse=lazy(()=>import('./components/Browse'));
+const GPT=lazy(()=>import('./components/GPT'));
+
 
 const router=createBrowserRouter([
   {
@@ -20,11 +21,21 @@ const router=createBrowserRouter([
       },
       {
         path:"/browse",
-        element:<Browse/>
+        element:
+        (
+        <Suspense fallback={<div>Loading...</div>}>
+        <Browse/>
+        </Suspense>
+        )
       },
       {
         path:"/gpt",
-        element:<GPT/>
+        element:
+        (
+          <Suspense fallback={<div>Loading...</div>}>
+          <GPT/>
+          </Suspense>
+        )
       }
     ]
   }

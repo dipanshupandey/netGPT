@@ -15,5 +15,5 @@ const gptSlice=createSlice(
 );
 
 export const{addGptResults}=gptSlice.actions;
-console.log(gptSlice);
+// console.log(gptSlice);
 export default gptSlice.reducer;

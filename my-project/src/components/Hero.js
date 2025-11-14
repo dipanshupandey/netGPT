@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 const Hero = () => {
   const [movie, setMovie] = useState(null);
   const movies = useSelector((store) => store.browse?.nowPlaying);
-
+  if(movie!=null) return ;
   useEffect(() => {
     if (movies?.length > 0) {
       setMovie(movies[Math.floor(Math.random() * movies.length)]);

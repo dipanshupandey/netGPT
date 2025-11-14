@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-// ❌ We have removed the insecure 'options' import
 
 const Video = ({ movieId }) => {
   const [trailer, setTrailer] = useState(null);

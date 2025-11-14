@@ -50,7 +50,7 @@ function useGetMovieRecommendations() {
     // Get the JSON string from the response
     const movieJsonString = chatChoice.message.content;
     const movieJson = JSON.parse(movieJsonString);
-    console.log(movieJson);
+    // console.log(movieJson);
 
     // --- 2. Call your SECURE TMDB API Proxy ---
 
@@ -82,7 +82,7 @@ function useGetMovieRecommendations() {
       return searchAll(item.title);
     });
     const results = await Promise.all(movies);
-    console.log(results);
+    // console.log(results);
     dispatch(addGptResults(results));
   }
   return getMovieRecommendations;
