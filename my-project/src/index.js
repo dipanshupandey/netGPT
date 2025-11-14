@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {createBrowserRouter,RouterProvider,routerProvider} from 'react-router'
+import {createBrowserRouter,RouterProvider} from 'react-router'
 import Login from './components/Login';
 import { lazy,Suspense } from 'react';
 const Browse=lazy(()=>import('./components/Browse'));
