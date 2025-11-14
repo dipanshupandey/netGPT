@@ -11,7 +11,7 @@ const Hero = () => {
     if (movies?.length > 0) {
       setMovie(movies[Math.floor(Math.random() * movies.length)]);
     }
-  }, []);
+  }, [movie]);
 
   return (
     <div className="relative w-full h-[70vh] sm:h-[80vh] md:h-screen text-white overflow-hidden">
