@@ -6,12 +6,12 @@ import { useSelector } from 'react-redux';
 const Hero = () => {
   const [movie, setMovie] = useState(null);
   const movies = useSelector((store) => store.browse?.nowPlaying);
-  if(movie!=null) return ;
+  
   useEffect(() => {
     if (movies?.length > 0) {
       setMovie(movies[Math.floor(Math.random() * movies.length)]);
     }
-  }, [movies]);
+  }, []);
 
   return (
     <div className="relative w-full h-[70vh] sm:h-[80vh] md:h-screen text-white overflow-hidden">
