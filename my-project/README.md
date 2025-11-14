@@ -1,70 +1,106 @@
-# Getting Started with Create React App
+# NetGPT: AI-Powered Movie Recommendation Hub
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**[ADD YOUR PROJECT GIF HERE]**
 
-## Available Scripts
+*A 10-second GIF demonstrating the AI search and movie results would be very impactful.*
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🚀 Live Demo
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**Experience NetGPT live:** [**https://net-gpt-five.vercel.app**](https://net-gpt-five.vercel.app)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+* **Test User:** `test100@user.com`
+* **Password:** `Hello@123`
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 📖 Project Overview
 
-### `npm run build`
+NetGPT is a modern, responsive web application that revolutionizes how you discover movies. It's a Netflix-style UI combined with the power of Generative AI.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+It uses the **Groq AI** (LLaMA 3.1) to understand natural language queries (e.g., *"Show me 5 funny action movies from the 80s"*) and provides instant, curated recommendations. This is *not* a simple text search; it's a full recommendation engine powered by an LLM.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The project also solves a critical technical challenge: the **TMDB API is blocked in some regions** (like India). This application bypasses this by using a **secure serverless API proxy**, demonstrating a robust, full-stack architecture.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## ✨ Key Features
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+* **AI-Powered Search (Groq):** Utilizes the Groq AI model to understand natural language prompts and generate curated, relevant movie lists.
+* **Secure User Authentication:** Full-featured authentication (Sign In, Sign Up, Sign Out) powered by **Firebase Auth** with protected routes.
+* **Efficient State Management:** Uses **Redux Toolkit** to manage application-wide state, including user data, movie lists, and AI results.
+* **Dynamic Movie Trailers:** Fetches and displays movie trailers on the main browse page for an immersive, Netflix-like experience.
+* **Multi-Language Support:** (Feature) Built with a scalable structure to easily add multi-language support (e.g., using i18n).
+* **Optimized Performance:** Implements **Lazy Loading** for React components to reduce initial bundle size and improve load times.
+* **Curated Carousels:** Displays multiple categories (Now Playing, Popular, Top Rated) fetched dynamically from the TMDB API.
+* **Fully Responsive Design:** A mobile-first, responsive UI built with **Tailwind CSS** that looks and works great on all devices.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🛠️ Tech Stack & Tools
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+* **Frontend:** React, React Router, Redux Toolkit, Tailwind CSS
+* **Backend (Serverless):** Vercel Serverless Functions (Node.js)
+* **Authentication:** Firebase Auth
+* **APIs:** Groq AI (for recommendations), TMDB (for movie data)
+* **Deployment:** Vercel
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 💡 Technical Highlights & Problem-Solving
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This project demonstrates robust, secure, and efficient full-stack development.
 
-### Code Splitting
+### 1. Secure Serverless API Proxy
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+* **Problem:** The TMDB API is blocked in some regions, and both TMDB and Groq API keys must be kept secret. Exposing them in a React app is a major security risk.
+* **Solution:** I engineered a secure API proxy using **Vercel Serverless Functions**.
+    * The React client *never* talks to TMDB or Groq directly.
+    * All requests are sent to internal API endpoints (`/api/tmdb`, `/api/groq`).
+    * The serverless function (running on Vercel's backend) securely reads the `TMDB_API_KEY` and `GROQ_API_KEY` from environment variables, calls the external API, and returns the data to the client.
+* **Benefit:** This architecture **(1)** Bypasses regional API blocks, **(2)** Secures all secret API keys, and **(3)** Demonstrates a professional full-stack, "backend-for-frontend" pattern.
 
-### Analyzing the Bundle Size
+### 2. State-Driven AI Recommendation Flow
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+The AI search feature uses a clean, state-driven flow orchestrated by Redux:
+1.  User submits a prompt (e.g., "5 sad movies about dogs").
+2.  The prompt is sent to the `/api/groq` proxy.
+3.  Groq's AI model generates a JSON object of 5 movie titles.
+4.  The React app receives this JSON, parses it, and then uses a `Promise.all` call to fetch details for all 5 movies *in parallel* using the `/api/tmdb` proxy.
+5.  The final, rich movie data is stored in the Redux `gptSlice` and instantly rendered on the UI.
 
-### Making a Progressive Web App
+### 3. Code Optimization & Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+* **Custom Hooks:** The app is built with several custom React hooks (e.g., `useAddData`, `useGetMovieRecommendations`) to encapsulate logic, promote reusability, and keep components clean.
+* **Lazy Loading:** React components are lazy-loaded to split the code into smaller chunks, leading to a significantly faster initial page load.
+* **Monorepo-Style Structure:** The project is structured with the React app (`/my-project/src`) and serverless functions (`/my-project/api`) in the same directory, which Vercel is optimized to build and deploy seamlessly.
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 📂 Project Structure
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+/my-project
+├── /api
+│   ├── tmdb.js      # Proxy for TMDB (v3) API
+│   └── groq.js      # Proxy for Groq AI API
+│
+├── /public
+│   ├── favicon.ico
+│   └── ... (other static assets)
+│
+├── /src
+│   ├── /components
+│   ├── /hooks
+│   ├── /utils
+│   │   ├── browseSlice.js
+│   │   ├── gptSlice.js
+│   │   ├── appStore.js
+│   │   ├── firebase.js
+│   │   └── ...
+│   ├── App.js
+│   └── index.js
+│
+├── .gitignore
+├── package.json
+└── vercel.json      

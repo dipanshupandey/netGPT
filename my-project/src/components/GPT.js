@@ -5,7 +5,7 @@ const GPT = () => {
   return (
     <div className='w-full  h-screen flex flex-col justify-center items-center '>
       
-      <img className="fixed -z-10  h-full w-full object-cover" src="/background.jpg" alt="" />
+      <img className="fixed -z-10  h-screen w-full object-cover" src="/background.jpg" alt="" />
       <GPTSearch/>
       <GPTResults/>
 

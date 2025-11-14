@@ -1,27 +1,39 @@
 import React, { useEffect, useState } from 'react';
-import { options } from '../utils/constants';
+// ❌ We have removed the insecure 'options' import
+
 const Video = ({ movieId }) => {
   const [trailer, setTrailer] = useState(null);
-  const getVideo = async () => {
-    try {
-      const res = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}/videos?language=en-US`,
-        options
-      );
-      const data = await res.json();
-
-      // Filter for trailer type
-      const trailers = data?.results?.filter((vid) => vid.type === 'Trailer');
-      const selectedTrailer = trailers?.length ? trailers[0] : data?.results?.[0];
-      setTrailer(selectedTrailer);
-    } catch (error) {
-      console.error('Error fetching trailer:', error);
-    }
-  };
 
   useEffect(() => {
-    if (movieId) getVideo();
-  }, [movieId]);
+    // We define the async function *inside* useEffect
+    // This is a best practice and avoids dependency array issues.
+    const getVideo = async () => {
+      if (!movieId) return; // Don't fetch if there's no movieId
+
+      try {
+        // 1. This is the TMDB path we want to get
+        const tmdbPath = `/movie/${movieId}/videos?language=en-US`;
+        
+        // 2. This is our secure Vercel proxy URL
+        const url = `/api/tmdb?path=${encodeURIComponent(tmdbPath)}`;
+
+        // 3. Fetch from the proxy. No 'options' object is needed!
+        const res = await fetch(url); 
+        const data = await res.json();
+
+        // Filter for trailer type
+        const trailers = data?.results?.filter((vid) => vid.type === 'Trailer');
+        const selectedTrailer = trailers?.length ? trailers[0] : data?.results?.[0];
+        setTrailer(selectedTrailer);
+
+      } catch (error) {
+        console.error('Error fetching trailer:', error);
+      }
+    };
+
+    getVideo(); // Call the function
+
+  }, [movieId]); // This effect re-runs only when movieId changes
 
   return (
     <div className="relative w-full h-[50vh] sm:h-[70vh] md:h-screen overflow-hidden bg-black">
@@ -37,7 +49,7 @@ const Video = ({ movieId }) => {
           allowFullScreen
         ></iframe>
       ) : (
-        // 🔹 Fallback background for small screens or slow connections
+        // 🔹 Fallback
         <div className="flex items-center justify-center h-full text-white text-sm sm:text-base">
           Loading trailer...
         </div>
