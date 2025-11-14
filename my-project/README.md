@@ -1,9 +1,6 @@
 # NetGPT: AI-Powered Movie Recommendation Hub
 
 
-
-*A 10-second GIF demonstrating the AI search and movie results would be very impactful.*
-
 ---
 
 ## 🚀 Live Demo
