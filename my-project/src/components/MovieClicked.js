@@ -2,13 +2,12 @@ import React, { useEffect } from "react";
 import { ln } from "../utils/constants";
 import { useSelector, useDispatch } from "react-redux";
 import { removeSelectedMovie } from "../utils/browseSlice";
-import { useNavigate } from "react-router";
 const MovieClicked = () => {
   const movie = useSelector((store) => store.browse.selectedMovie);
   const lan = useSelector((store) => store.user.lan);
   const language = ln[lan];
   const dispatch = useDispatch();
-  const navigate=useNavigate();
+  
 
   // Disable background scroll while modal is open
   useEffect(() => {
@@ -70,7 +69,7 @@ const MovieClicked = () => {
 
           {/* Play button */}
           <button className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg transition-all w-full md:w-auto text-center"
-          onClick={()=>navigate(`/video/${movie.id}`)}>
+          >
             {language.play}
           </button>
         </div>

@@ -31,6 +31,15 @@ const Header = () => {
           className="w-28 sm:w-36 cursor-pointer scale-125"
         />
       </div>
+      <div className="flex justify-center items-center gap-3">
+      {user && (
+          <Link
+            to={isOnGptPage ? "/browse" : "/gpt"}
+            className="bg-white text-purple-600 font-semibold h-9 w-24 flex items-center justify-center rounded transition hover:bg-purple-100"
+          >
+            {isOnGptPage ? language.browse : language.gpt}
+          </Link>
+        )}
 
       {/* Hamburger */}
       <button
@@ -42,14 +51,7 @@ const Header = () => {
 
       {/* Desktop Menu */}
       <div className="hidden lg:flex items-center space-x-4">
-        {user && (
-          <Link
-            to={isOnGptPage ? "/browse" : "/gpt"}
-            className="bg-white text-purple-600 font-semibold h-9 w-24 flex items-center justify-center rounded transition hover:bg-purple-100"
-          >
-            {isOnGptPage ? language.browse : language.gpt}
-          </Link>
-        )}
+        
 
         <select
           name="language"
@@ -82,8 +84,8 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="absolute top-14 right-4 bg-white/40 text-white flex flex-col items-center rounded-lg p-4 space-y-3 lg:hidden w-48">
-          {user && (
+        <div className="absolute top-16 right-4 bg-white/40 text-white flex flex-col items-center rounded-lg p-4 space-y-3 lg:hidden w-48">
+          {/* {user && (
             <Link
               to={isOnGptPage ? "/browse" : "/gpt"}
               className="bg-white text-purple-600 font-semibold h-9 w-32 flex items-center justify-center rounded transition hover:bg-purple-100"
@@ -91,7 +93,7 @@ const Header = () => {
             >
               {isOnGptPage ? language.browse : language.gpt}
             </Link>
-          )}
+          )} */}
 
           <select
             name="language"
@@ -125,6 +127,7 @@ const Header = () => {
           )}
         </div>
       )}
+      </div>
     </header>
   );
 };
