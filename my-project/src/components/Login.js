@@ -126,7 +126,7 @@ const Login = () => {
             </button>
 
             <p className="text-xs sm:text-sm text-[#B4B3B3] mt-4 ">
-              {logged ? language.newToNetflix+" " : language.alreadyUser+" "}
+              {logged ? language.newToNetGPT+" " : language.alreadyUser+" "}
               <span
                 className="text-white font-bold cursor-pointer"
                 onClick={() => setLogged(!logged)}
